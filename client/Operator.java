@@ -2,7 +2,6 @@ package client;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Scanner;
 import java.io.*;
 
 public class Operator extends User{
@@ -12,12 +11,13 @@ public class Operator extends User{
 	
 	public void uploadFile() throws SQLException, IOException{
 		System.out.print("FileName: ");
-		Scanner in = new Scanner(System.in);
-		String filename = in.nextLine();
+		DataProcessing.scanner.nextLine();	//这一行用于清楚缓存区
+		
+		String filename = DataProcessing.scanner.nextLine();
 		System.out.print("ID");
-		String ID = in.nextLine();
+		String ID = DataProcessing.scanner.nextLine();
 		System.out.print("Description: ");
-		String description = in.nextLine();
+		String description = DataProcessing.scanner.nextLine();
 		Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
 		DataProcessing.insertDoc(ID, name, timeStamp, description, filename);
 		//将文件内容添加数据库

@@ -2,7 +2,6 @@ package client;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Scanner;
 
 public class Systems {
 
@@ -16,20 +15,20 @@ public class Systems {
 	public static void main(String[] args) {
 		Systems system = new Systems();
 		
-		Scanner in = new Scanner(System.in);
-		
 		while(true){
 			system.welcome();
 			System.out.print("菜单号：");
-			int n = in.nextInt();
-			if(n != 1)
+			int n = DataProcessing.scanner.nextInt();
+			if(n != 1){
+				DataProcessing.scanner.close();
 				break;
+			}
 			else{
 				DataProcessing.Init();
 				System.out.print("用户名:");
-				String name = in.next();
+				String name = DataProcessing.scanner.next();
 				System.out.print("密码：");
-				String password = in.next();
+				String password = DataProcessing.scanner.next();
 				User user = null;
 				try {
 					user = DataProcessing.searchUser(name, password);
@@ -90,7 +89,6 @@ public class Systems {
 				}
 			}
 		}
-		in.close();
 	}
 	
 	/*
@@ -103,18 +101,17 @@ public class Systems {
 	public void administrator(User user) throws SQLException, IOException{
 		Administrator administrator = (Administrator)user;
 		administrator.showMenu();
-		Scanner in = new Scanner(System.in);
-		switch(in.nextInt()){
+		switch(DataProcessing.scanner.nextInt()){
 		case 1:
 			System.out.print("待修改用户用户名：");
 			String name;
-			name = in.next();
+			name = DataProcessing.scanner.next();
 			System.out.print("修改后的用户密码：");
 			String password;
-			password = in.next();
+			password = DataProcessing.scanner.next();
 			System.out.print("修改后的用户角色：");
 			String role;
-			role = in.next();
+			role = DataProcessing.scanner.next();
 			if(DataProcessing.updateUser(name, password, role))
 				System.out.println("修改成功！");
 			else
@@ -123,7 +120,7 @@ public class Systems {
 		case 2:
 			System.out.print("待删除用户名：");
 			String name_;
-			name_ = in.next();
+			name_ = DataProcessing.scanner.next();
 			if(DataProcessing.deleteUser(name_))
 				System.out.println("删除成功！");
 			else
@@ -137,7 +134,7 @@ public class Systems {
 			break;
 		case 5:
 			System.out.print("文件名：");
-			String filename = in.next();
+			String filename = DataProcessing.scanner.next();
 			administrator.downloadFile(filename);
 			break;
 		case 6:
@@ -145,11 +142,11 @@ public class Systems {
 			break;
 		case 7:
 			System.out.print("新密码：");
-			String newPassword_ = in.next();
+			String newPassword_ = DataProcessing.scanner.next();
 			administrator.changeUserInfo(newPassword_);
 			break;
 		default:
-			in.close();
+			DataProcessing.scanner.close();
 			break;
 		}
 	}
@@ -159,14 +156,13 @@ public class Systems {
 		Operator operator = (Operator)user;
 		//类型强制转换;将父类引用转换为子类引用
 		operator.showMenu();
-		Scanner in = new Scanner(System.in);
-		switch(in.nextInt()){
+		switch(DataProcessing.scanner.nextInt()){
 		case 1:
 			operator.uploadFile();
 			break;
 		case 2:
 			System.out.print("文件名：");
-			String filename = in.next();
+			String filename = DataProcessing.scanner.next();
 			operator.downloadFile(filename);
 			break;
 		case 3:
@@ -174,11 +170,11 @@ public class Systems {
 			break;
 		case 4:
 			System.out.print("新密码：");
-			String password = in.next();
+			String password = DataProcessing.scanner.next();
 			operator.changeUserInfo(password);
 			break;
 		default:
-			in.close();
+			DataProcessing.scanner.close();
 			break;
 		}
 	}
@@ -187,11 +183,10 @@ public class Systems {
 	public void browser(User user) throws IOException, SQLException{
 		Browser browser = (Browser)user;
 		browser.showMenu();
-		Scanner in = new Scanner(System.in);
-		switch(in.nextInt()){
+		switch(DataProcessing.scanner.nextInt()){
 		case 1:
 			System.out.print("文件名：");
-			String filename = in.next();
+			String filename = DataProcessing.scanner.next();
 			browser.downloadFile(filename);
 			break;
 		case 2:
@@ -199,11 +194,11 @@ public class Systems {
 			break;
 		case 3:
 			System.out.print("新密码：");
-			String password = in.next();
+			String password = DataProcessing.scanner.next();
 			browser.changeUserInfo(password);
 			break;
 		default:
-			in.close();
+			DataProcessing.scanner.close();
 			break;
 		}
 

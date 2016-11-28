@@ -1,6 +1,5 @@
 package client;
 
-import java.util.Scanner;
 import java.sql.SQLException;
 import java.util.Enumeration;
 
@@ -10,19 +9,16 @@ public class Administrator extends User{
 	}
 	
 	public void addUser() throws SQLException{
-		Scanner scanner = new Scanner(System.in);
 		System.out.print("新增用户用户名：");
-		String newName = scanner.next();
+		String newName = DataProcessing.scanner.next();
 		System.out.print("新增用户密码：");
-		String newPassword = scanner.next();
+		String newPassword = DataProcessing.scanner.next();
 		System.out.print("新增用户角色：");
-		String newRole = scanner.next();
+		String newRole = DataProcessing.scanner.next();
 		if(DataProcessing.insertUser(newName, newPassword, newRole))
 			System.out.println("新增成功！");
 		else
 			System.out.println("该用户名已被添加，新增失败！");
-		
-		scanner.close();
 	}
 	/*
 	 * 此处也有子函数中scanner不得不close()造成主函数中标准流输入被关闭的问题

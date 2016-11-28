@@ -2,13 +2,16 @@ package client;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Scanner;
 import java.sql.*;
 
 public  class DataProcessing {
 
 	private static boolean connectToDB=false;
-	public static String hostPath = "E:\\文件\\垃圾文件\\hostFile\\";
-	public static String servePath = "E:\\文件\\垃圾文件\\serveFile\\";
+	public static String hostPath = "E:\\document\\垃圾文件\\hostFile\\";
+	public static String servePath = "E:\\document\\垃圾文件\\serveFile\\";
+	public static Scanner scanner = new Scanner(System.in); 
+
 	
 	static Hashtable<String, User> users;
 	static Hashtable<String, Doc> docs;
