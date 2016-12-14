@@ -24,7 +24,7 @@ public class Systems {
 				break;
 			}
 			else{
-				DataProcessing.Init();
+				DataProcessing.Init();	//无用代码
 				System.out.print("用户名:");
 				String name = DataProcessing.scanner.next();
 				System.out.print("密码：");

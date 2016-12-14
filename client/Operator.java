@@ -9,15 +9,16 @@ public class Operator extends User{
 		super(name, password, role);
 	}
 	
-	public void uploadFile() throws SQLException, IOException{
-		System.out.print("FileName: ");
-		DataProcessing.scanner.nextLine();	//这一行用于清楚缓存区
+	public static void uploadFile(String name, String ID, String description, String filename) throws SQLException, IOException{
+//		System.out.print("FileName: ");
+//		DataProcessing.scanner.nextLine();	//这一行用于清楚缓存区
 		
-		String filename = DataProcessing.scanner.nextLine();
-		System.out.print("ID");
-		String ID = DataProcessing.scanner.nextLine();
-		System.out.print("Description: ");
-		String description = DataProcessing.scanner.nextLine();
+//		String filename = DataProcessing.scanner.nextLine();
+//		System.out.print("ID");
+//		String ID = DataProcessing.scanner.nextLine();
+//		System.out.print("Description: ");
+//		String description = DataProcessing.scanner.nextLine();
+		
 		Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
 		DataProcessing.insertDoc(ID, name, timeStamp, description, filename);
 		//将文件内容添加数据库
