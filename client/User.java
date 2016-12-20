@@ -27,7 +27,7 @@ public abstract class User {
 			return false; 
 	}
 	
-	public boolean downloadFile(String filename) throws IOException{
+	public static boolean downloadFile(String filename) throws IOException{
 //		double ranValue=Math.random();
 //		if (ranValue>0.5)
 //			throw new IOException( "Error in accessing file" );

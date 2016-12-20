@@ -6,29 +6,34 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.awt.event.ActionEvent;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 public class DocFrame extends JFrame {
-
+	private static final long serialVersionUID = 1L;
+	
 	private JPanel contentPane;
 	private JTextField textField;
 	private JTextField textField_1;
+	private JTable table;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -42,10 +47,7 @@ public class DocFrame extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
-	public DocFrame(String cmd, String username) {
+	public DocFrame(String cmd, String username) throws SQLException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -55,9 +57,6 @@ public class DocFrame extends JFrame {
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
-		
-		JPanel panel = new JPanel();
-		tabbedPane.addTab("\u4E0B\u8F7D", null, panel, null);
 		
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("\u4E0A\u4F20", null, panel_1, null);
@@ -143,7 +142,69 @@ public class DocFrame extends JFrame {
 		button_1.setBounds(327, 137, 70, 23);
 		panel_1.add(button_1);
 		
+		JPanel panel = new JPanel();
+		tabbedPane.addTab("\u4E0B\u8F7D", null, panel, null);
+		panel.setLayout(null);
+		
+		table = new JTable();
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setModel(new DefaultTableModel(
+			getObjects(),
+			new String[] {
+				"\u6863\u6848\u53F7", "\u521B\u5EFA\u8005", "\u65F6\u95F4", "\u6587\u4EF6\u540D", "\u63CF\u8FF0"
+			}
+		));
+		table.setBounds(421, 162, -421, -158);
+		panel.add(table);
+				
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setBounds(0, 0, 419, 165);
+		panel.add(scrollPane);
+		JButton button_2 = new JButton("\u4E0B\u8F7D");
+		button_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String fileName = (String) table.getModel().getValueAt(table.getSelectedRow(), 3);
+				try {
+					if(User.downloadFile(fileName)){
+						JOptionPane.showMessageDialog(button_2, "下载成功！");
+					}
+					else{
+						JOptionPane.showMessageDialog(button_2, "下载失败！");
+					}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		});
+		button_2.setBounds(169, 189, 93, 23);
+		panel.add(button_2);
+		
 		if(cmd == "\u4E0A\u4F20")		 tabbedPane.setSelectedIndex(1);
 		else 		tabbedPane.setSelectedIndex(0);
+	}
+	
+	Object[][] getObjects() throws SQLException
+	{
+		ArrayList<Doc> arrayList = new ArrayList<>();
+		Enumeration<Doc> docs = DataProcessing.getAllDocs();
+		while(docs.hasMoreElements()){
+			arrayList.add(docs.nextElement());
+		}
+		Object[][] result = new Object[arrayList.size() + 1][5];
+		result[0][0] = "档案号";
+		result[0][1] = "创建者";
+		result[0][2] = "时间";
+		result[0][3] = "文件名";
+		result[0][4] = "描述";
+		for(int i = 0;i < arrayList.size();i++){
+			result[i + 1][0] = arrayList.get(i).getID();
+			result[i + 1][1] = arrayList.get(i).getCreator();
+			result[i + 1][2] = arrayList.get(i).getTimestamp().toString();
+			result[i + 1][3] = arrayList.get(i).getFilename();
+			result[i + 1][4] = arrayList.get(i).getDescription();
+		}
+		return result;
 	}
 }

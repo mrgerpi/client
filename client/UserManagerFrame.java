@@ -18,8 +18,10 @@ import javax.swing.JComboBox;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JList;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.ListSelectionModel;
 
 public class UserManagerFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -32,10 +34,8 @@ public class UserManagerFrame extends JFrame {
 	private ActionListener actionListener = null;
 	private JTextField textField_2;
 	private JTextField textField_3;
+	private JTable table;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -49,10 +49,6 @@ public class UserManagerFrame extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 * @throws SQLException 
-	 */
 	public UserManagerFrame(String cmd) throws SQLException {
 		setTitle("UserManager");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -184,19 +180,55 @@ public class UserManagerFrame extends JFrame {
 		
 		JPanel panel_2 = new JPanel();
 		tabbedPane.addTab("\u5220\u9664\u7528\u6237", null, panel_2, null);
+		panel_2.setLayout(null);
 		
-//		//努力得到一个数组，用于构造JList
-//		Enumeration<User> e = DataProcessing.getAllUser();
-//		ArrayList<User> arrayList = null;
-//		while(e.hasMoreElements()){
-//			arrayList.add(e.nextElement());
-//		}
-//		
-		JList list = new JList();
-		panel_2.add(list);
+		table = new JTable();
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setShowGrid(false);
+		table.setBounds(0, 0, 409, 169);
+		table.setModel(new DefaultTableModel(
+			getObjects(),
+			new String[] {
+				"\u89D2\u8272 ", "\u5BC6\u7801", "\u7528\u6237\u540D"
+			}
+		));
+		panel_2.add(table);
 		
-		JScrollPane scrollPane = new JScrollPane();
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setBounds(0, 0, 409, 169);
 		panel_2.add(scrollPane);
+		
+		JButton button_4 = new JButton("\u5220\u9664");
+		button_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String userName = (String) table.getModel().getValueAt(table.getSelectedRow(), 0);
+				try {
+					if(DataProcessing.deleteUser(userName)){
+						JOptionPane.showMessageDialog(button_4, "删除成功！");
+						table.setModel(new DefaultTableModel(
+								getObjects(),
+								new String[] {
+									"\u89D2\u8272 ", "\u5BC6\u7801", "\u7528\u6237\u540D"
+								}
+							));
+					}
+					else{
+						JOptionPane.showMessageDialog(button_4, "删除失败！");
+						table.setModel(new DefaultTableModel(
+								getObjects(),
+								new String[] {
+									"\u89D2\u8272 ", "\u5BC6\u7801", "\u7528\u6237\u540D"
+								}
+							));
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		});
+		button_4.setBounds(158, 179, 93, 23);
+		panel_2.add(button_4);
 		
 		if(cmd == "\u65B0\u589E\u7528\u6237")	tabbedPane.setSelectedIndex(0);
 		else if(cmd == "\u4FEE\u6539\u7528\u6237") 	tabbedPane.setSelectedIndex(1);
@@ -235,6 +267,28 @@ public class UserManagerFrame extends JFrame {
 			};
 		}
 		return actionListener;
+	}
+
+	Object[][] getObjects() throws SQLException
+	{
+		ArrayList<User> arrayList = new ArrayList<User>();
+		Enumeration<User> users = DataProcessing.getAllUser();
+		while(users.hasMoreElements()){
+			User user = users.nextElement();
+			arrayList.add(user);
+		}
+		//将枚举类型转化为ArrayList
+		
+		Object[][] result = new Object[arrayList.size() + 1][3];
+		result[0][0] = "用户名";
+		result[0][1] = "密码";
+		result[0][2] = "身份";
+		for(int i = 0; i < arrayList.size();i++){
+			result[i + 1][0] = arrayList.get(i).getName();
+			result[i + 1][1] = arrayList.get(i).getPassword();
+			result[i + 1][2] = arrayList.get(i).getRole();
+		}
+		return result;  
 	}
 }
 	
