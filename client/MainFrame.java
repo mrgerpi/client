@@ -36,8 +36,10 @@ public class MainFrame extends JFrame {
 		});
 	}
 
+	//向构造函数中传入user是为了根据身份决定主菜单中哪一个子菜单是不可访问的
 	public MainFrame(User user) {
 		username = user.getName();
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		
@@ -107,6 +109,10 @@ public class MainFrame extends JFrame {
 		}
 	}
 	
+	/**
+	 * 点击user按钮，触发userManagerFrame，传入cmd,以此决定首选页
+	 * @return
+	 */
 	ActionListener getUserActionListener()
 	{
 		if(userActionListener == null){
@@ -128,6 +134,10 @@ public class MainFrame extends JFrame {
 		return userActionListener;
 	}
 	
+	/**
+	 * 传入cmd，决定首选页，传入username，决定上传文件子菜单是否可访问
+	 * @return
+	 */
 	ActionListener getDocActionListener()
 	{
 		if(docActionListener == null){

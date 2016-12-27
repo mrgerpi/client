@@ -11,7 +11,6 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 
 import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
@@ -271,13 +270,7 @@ public class UserManagerFrame extends JFrame {
 
 	Object[][] getObjects() throws SQLException
 	{
-		ArrayList<User> arrayList = new ArrayList<User>();
-		Enumeration<User> users = DataProcessing.getAllUser();
-		while(users.hasMoreElements()){
-			User user = users.nextElement();
-			arrayList.add(user);
-		}
-		//将枚举类型转化为ArrayList
+		ArrayList<User> arrayList = DataProcessing.getAllUser();
 		
 		Object[][] result = new Object[arrayList.size() + 1][3];
 		result[0][0] = "用户名";

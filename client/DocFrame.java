@@ -21,7 +21,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -100,7 +99,7 @@ public class DocFrame extends JFrame {
 				String ID = textField.getText();
 				String description = textArea.getText();
 				try {
-					Operator.uploadFile(username, ID, description, filename);
+					User.uploadFile(username, ID, description, filename);
 					JOptionPane.showMessageDialog(btnNewButton, "上传成功！");
 					textArea.setText("");
 					textField.setText("");
@@ -187,11 +186,7 @@ public class DocFrame extends JFrame {
 	
 	Object[][] getObjects() throws SQLException
 	{
-		ArrayList<Doc> arrayList = new ArrayList<>();
-		Enumeration<Doc> docs = DataProcessing.getAllDocs();
-		while(docs.hasMoreElements()){
-			arrayList.add(docs.nextElement());
-		}
+		ArrayList<Doc> arrayList = DataProcessing.getAllDocs();
 		Object[][] result = new Object[arrayList.size() + 1][5];
 		result[0][0] = "档案号";
 		result[0][1] = "创建者";

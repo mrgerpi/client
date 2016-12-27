@@ -1,12 +1,11 @@
 package client;
 
 import java.sql.SQLException;
-import java.util.Enumeration;
-
+import java.sql.Timestamp;
 import java.io.*;
 
 
-public abstract class User {
+public class User {
 	protected String name;
 	protected String password;
 	protected String role;
@@ -21,17 +20,12 @@ public abstract class User {
 		//写用户信息到存储
 		if (DataProcessing.updateUser(name, password, role)){
 			this.password=password;
-//			System.out.println("修改成功");
 			return true;
 		}else
 			return false; 
 	}
 	
 	public static boolean downloadFile(String filename) throws IOException{
-//		double ranValue=Math.random();
-//		if (ranValue>0.5)
-//			throw new IOException( "Error in accessing file" );
-		
 		File serveFile = new File(DataProcessing.servePath + filename);
 		File hostFile = new File(DataProcessing.hostPath + filename);
 		//若原来没有filename，则会创建一个文件
@@ -50,62 +44,53 @@ public abstract class User {
 		return true;
 	}
 	
-	public void showFileList() throws SQLException{
-//		double ranValue=Math.random();
-//		if (ranValue>0.5)
-//			throw new SQLException( "Error in accessing file DB" );
-//		System.out.println("列表... ...");
-		Enumeration<Doc> docs = DataProcessing.getAllDocs();
-		while(docs.hasMoreElements()){
-			Doc doc = docs.nextElement();
-			System.out.print("ID: ");
-			System.out.print(doc.getID() + "\n");
-			System.out.print("FileName: ");
-			System.out.print(doc.getFilename() + "\n");
-			System.out.print("Description: ");
-			System.out.print(doc.getDescription() + "\n");
-			System.out.print("Creator: ");
-			System.out.print(doc.getCreator() + "\n");
-			System.out.print("TimeStamp: ");
-			System.out.print(doc.getTimestamp() + "\n");
+	public static void uploadFile(String name, String ID,
+			String description, String filename) throws SQLException, IOException{	
+		Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+		//此时的filename是完全文件名，带有路径
+		File hostFile = new File(filename);
+		
+		//此时的filename已经没有
+		for(int i = filename.length() - 1;i > 0;i--){
+			if(filename.charAt(i) == '/'){
+				filename = filename.substring(i, filename.length() - 1);
+			}		
 		}
+		System.out.println(filename);
+		File serveFile = new File(DataProcessing.servePath + filename);
+		DataProcessing.insertDoc(ID, name, timeStamp, description, filename);
+		//将文件内容添加数据库
 		
+		BufferedReader br = new BufferedReader(new FileReader(hostFile));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(serveFile));
 		
-		
-		
-		
-	}
+		int ch = 0;
+		while((ch = br.read()) > 0){
+			bw.write(ch);
+		}
+		br.close();
+		bw.close();
+		//子函数中in.close()使System.in也close了
+		//若再返回主函数中无法再用Scanner从标准输入流中输入了
+		//问题没有解决
+	};
 	
-	public abstract void showMenu();
-	
-	public void exitSystem(){
-//		System.out.println("系统退出, 谢谢使用 ! ");
-		System.exit(0);
-	}
-
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
 	public String getPassword() {
 		return password;
 	}
-
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
 	public String getRole() {
 		return role;
 	}
-
 	public void setRole(String role) {
 		this.role = role;
 	}
-	
-
 }

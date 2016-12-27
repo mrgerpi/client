@@ -23,11 +23,7 @@ public class Login {
 	private JTextField textField;
 	private JPasswordField passwordField;
 	private ActionListener actionListener = null;
-	private Service service = null;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -37,26 +33,20 @@ public class Login {
 					window.frmBmslogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				} catch (Exception e) {
 					e.printStackTrace();
+				}finally{
+					try {
+						DataProcessing.disconnectFromDB();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		});
 	}
 
-	/**
-	 * Create the application.
-	 * @throws SQLException 
-	 */
 	public Login() throws SQLException {
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 * @throws SQLException 
-	 */
-	private void initialize() throws SQLException {
 		frmBmslogin = new JFrame();
-		service = new Service();
 		frmBmslogin.setSize(500, 300);
 		frmBmslogin.setEnabled(true);
 		frmBmslogin.setTitle("\u7CFB\u7EDF\u767B\u5F55");
@@ -94,6 +84,7 @@ public class Login {
 		passwordField.setBounds(172, 130, 171, 32);
 		panel.add(passwordField);
 	}
+	
 	ActionListener getActionListener()throws SQLException
 	{
 		if(actionListener == null){
@@ -108,7 +99,8 @@ public class Login {
 								JOptionPane.showMessageDialog(frmBmslogin, "搞错了你！没这个人！！！");
 							}
 							else{
-								service.setMainFrame(user);
+								MainFrame frame = new MainFrame(user);
+								frame.setVisible(true);
 								frmBmslogin.dispose();	
 							}
 						} catch (SQLException e1) {
@@ -120,4 +112,5 @@ public class Login {
 		}
 		return actionListener;
 	}
+
 }
