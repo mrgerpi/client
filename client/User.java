@@ -50,13 +50,16 @@ public class User {
 		//此时的filename是完全文件名，带有路径
 		File hostFile = new File(filename);
 		
-		//此时的filename已经没有
-		for(int i = filename.length() - 1;i > 0;i--){
-			if(filename.charAt(i) == '/'){
-				filename = filename.substring(i, filename.length() - 1);
-			}		
-		}
 		System.out.println(filename);
+		//此时的filename已经没有路
+		System.out.println(filename.length());
+		while(filename.indexOf("\\") != -1){
+			int n = filename.indexOf("\\");
+			filename = filename.substring(n + 2);
+		}
+		
+		System.out.println(filename);
+		
 		File serveFile = new File(DataProcessing.servePath + filename);
 		DataProcessing.insertDoc(ID, name, timeStamp, description, filename);
 		//将文件内容添加数据库
